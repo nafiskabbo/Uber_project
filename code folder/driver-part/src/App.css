@@ -1,0 +1,123 @@
+/* পুরো স্ক্রিন রিসেট */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #121212;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* মেইন কন্টেইনার লেআউট */
+.app-container {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* ড্রাইভার বাম প্যানেল */
+.controls-panel.driver-theme {
+  width: 420px;
+  min-width: 420px;
+  height: 100vh;
+  background-color: #1c1c1c;
+  color: #ffffff;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-right: 1px solid #2d2d2d;
+  z-index: 10;
+}
+
+/* ডান পাশের ম্যাপ */
+.map-view {
+  flex: 1;
+  height: 100vh;
+  background-color: #242424;
+}
+
+/* ড্রাইভার মেডেল/ব্যাজ */
+.badge-role.driver-badge {
+  background: rgba(0, 230, 118, 0.15);
+  color: #00e676;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  width: fit-content;
+}
+
+/* প্রোগ্রেস স্টেপ ইন্ডিকেটর */
+.step-indicator {
+  display: flex;
+  justify-content: space-between;
+  background: #262626;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #555;
+}
+.step.active {
+  color: #00e676;
+  font-weight: bold;
+}
+
+/* চ্যাট ও মেসেজ বাবল */
+.chat-box {
+  height: 200px;
+  overflow-y: auto;
+  background: #222;
+  border: 1px solid #333;
+  padding: 10px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.message-bubble {
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 80%;
+  font-size: 13px;
+}
+.message-bubble.driver { background: #00e676; color: #000; align-self: flex-end; }
+.message-bubble.customer { background: #2979ff; color: #fff; align-self: flex-start; }
+
+.chat-input-form {
+  display: flex;
+  gap: 6px;
+}
+.chat-input-form input {
+  flex: 1;
+  padding: 10px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: #fff;
+  border-radius: 4px;
+}
+.chat-input-form button {
+  padding: 0 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* পালস অ্যানিমেশন (ওয়েটিং স্টেট) */
+.pulse-loader {
+  width: 15px;
+  height: 15px;
+  background: #ff1744;
+  border-radius: 50%;
+  margin: 0 auto;
+  animation: pulseGlow 1.5s infinite;
+}
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(255, 23, 68, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 23, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 23, 68, 0); }
+}

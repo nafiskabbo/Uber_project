@@ -1,0 +1,140 @@
+/* Uber-project/src/components/Login.css */
+
+/* ১. পুরো স্ক্রিন জুড়িয়া রিচ কাস্টমার গ্রেডিয়েন্ট ও ডার্ক থিম ব্যাকগ্রাউন্ড */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at 50% 50%, #111625 0%, #07090e 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  /* ২. কাস্টমারের জন্য গ্লাস-মরফিজম কার্ড ডিজাইন */
+  .login-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 40px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+    width: 360px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* হোভার করলে কাস্টমার থিমের জন্য স্কাই-ব্লু/নিওন গ্লো আসবে */
+  .login-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 60px rgba(0, 176, 255, 0.15);
+    border-color: rgba(0, 176, 255, 0.3);
+  }
+  
+  /* ৩. হেডার টাইটেল গ্রেডিয়েন্ট (কাস্টমার স্পেসিফিক ব্লু-শেড) */
+  .login-card h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    background: linear-gradient(45deg, #00b0ff, #00e676);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  /* ৪. ইনপুট গ্রুপ লেআউট */
+  .input-group {
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input-group label {
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #90a4ae;
+    transition: color 0.3s ease;
+    text-align: left;
+  }
+  
+  /* ৫. ইনপুট বক্স ও টাইপিং গ্লো ইফেক্ট */
+  .input-group input {
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: #ffffff;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+  }
+  
+  /* টাইপ করার সময় স্কাই-ব্লু গ্লো করবে */
+  .input-group input:focus {
+    border-color: #00b0ff;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 15px rgba(0, 176, 255, 0.25);
+  }
+  
+  .input-group:focus-within label {
+    color: #00b0ff;
+  }
+  
+  /* ৬. মেটালিক গ্রেডিয়েন্ট বাটন */
+  .login-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #00b0ff 0%, #0081cb 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 176, 255, 0.2);
+    margin-top: 15px;
+    letter-spacing: 0.5px;
+  }
+  
+  .login-btn:hover {
+    transform: scale(1.01);
+    box-shadow: 0 6px 20px rgba(0, 176, 255, 0.4);
+    background: linear-gradient(90deg, #0081cb 0%, #00b0ff 100%);
+  }
+  
+  .login-btn:active {
+    transform: scale(0.99);
+  }
+
+  .login-card p {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 14px;
+    color: #90a4ae;
+  }
+  
+  .login-card p span {
+    color: #00b0ff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 5px;
+    text-decoration: underline;
+  }
+  
+  .login-card p span:hover {
+    color: #00e676;
+    text-shadow: 0 0 8px rgba(0, 230, 118, 0.4);
+  }

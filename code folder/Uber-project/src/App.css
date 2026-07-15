@@ -1,0 +1,172 @@
+/* পুরো স্ক্রিনের মেইন লেআউট */
+.app-container {
+  display: flex;
+  flex-direction: row; /* প্যানেল এবং ম্যাপ পাশাপাশি বসবে */
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #121212;
+}
+
+/* বাম পাশের কন্ট্রোল প্যানেল */
+.controls-panel {
+  width: 420px;       /* ফিক্সড উইডথ */
+  min-width: 420px;
+  height: 100vh;      /* ফুল হাইট */
+  background-color: #1c1c1c;
+  color: #ffffff;
+  padding: 24px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-right: 1px solid #2d2d2d;
+}
+
+/* ডান পাশের ম্যাপ ভিউ */
+.map-view {
+  flex: 1;            /* স্ক্রিনের বাকি পুরো অংশ দখল করবে */
+  height: 100vh;
+  background-color: #242424;
+}
+
+/* 📊 স্টেপ ইন্ডিকেটর স্টাইল */
+.step-indicator {
+  display: flex;
+  justify-content: space-between;
+  background: #2a2a2a;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #666;
+  border: 1px solid #333;
+}
+.step.active {
+  color: #00e676;
+  text-shadow: 0 0 8px rgba(0, 230, 118, 0.4);
+}
+
+/* 🎫 লোকেশন পিলস/ব্যাজ */
+.location-badges-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.location-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.location-pill.pickup { background: rgba(0, 230, 118, 0.15); color: #00e676; }
+.location-pill.dropoff { background: rgba(255, 23, 68, 0.15); color: #ff1744; }
+.clear-pill-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+/* 🔥 গ্লোয়িং পালস বাটন */
+.predict-button-interactive {
+  width: 100%;
+  padding: 14px;
+  background: #333;
+  color: #888;
+  border: 1px solid #444;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: not-allowed;
+  transition: all 0.3s ease;
+}
+.predict-button-interactive.pulse-glow {
+  background: #fff;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(255,255,255,0.3);
+}
+.predict-button-interactive.pulse-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(255,255,255,0.6);
+}
+
+/* 💬 চ্যাট বাবল ডিজাইন */
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+.current-price-tag {
+  background: #00e676;
+  color: #000;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 900;
+}
+.message-bubble {
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 85%;
+  display: flex;
+  flex-direction: column;
+}
+.message-bubble.driver { background: #2d2d2d; align-self: flex-start; color: #fff; }
+.message-bubble.customer { background: #2979ff; align-self: flex-end; color: #fff; }
+.sender-name { font-size: 10px; color: #aaa; margin-bottom: 2px; font-weight: bold;}
+.message-text { margin: 0; font-size: 13.5px; line-height: 1.4; }
+
+/* 💬 টাইপিং ডটস অ্যানিমেশন লজিক */
+.typing-dots {
+  display: flex;
+  gap: 4px;
+  padding: 6px 4px;
+}
+.typing-dots span {
+  width: 6px;
+  height: 6px;
+  background: #aaa;
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+.typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+.typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1.0); }
+}
+
+.accept-ride-btn-interactive {
+  width: 100%;
+  background: linear-gradient(135deg, #00e676, #00b0ff);
+  color: #000;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 900;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 4px 15px rgba(0, 230, 118, 0.2);
+  transition: all 0.2s;
+}
+.accept-ride-btn-interactive:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 230, 118, 0.4);
+}
