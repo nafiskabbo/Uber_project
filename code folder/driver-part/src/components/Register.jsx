@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import "./Login.css";
 
+/**
+ * ড্রাইভার রেজিস্ট্রেশন ফর্ম
+ * 🚀 ফিক্স: API URL localhost → 127.0.0.1 (লগইনের সাথে কনসিস্টেন্ট)
+ * সফল হলে driverName localStorage-এ সেভ — পরে WebSocket/অন্যান্য জায়গায় লাগে
+ */
 function Register({ onRegisterSuccess, switchToLogin }) {
     const [formData, setFormData] = useState({
         name: '', gmail: '', password: '', car_name: '', license_number: ''
@@ -18,7 +23,8 @@ function Register({ onRegisterSuccess, switchToLogin }) {
         }
 
         try {
-            const response = await fetch('http://localhost:8000/api/driver/register', { // 🚀 127.0.0.1 বদলে localhost করা হলো
+            // ব্যাকএন্ড ড্রাইভার রেজিস্ট্রেশন এন্ডপয়েন্ট
+            const response = await fetch('http://127.0.0.1:8000/api/driver/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -26,7 +32,8 @@ function Register({ onRegisterSuccess, switchToLogin }) {
 
             const data = await response.json();
             if (response.ok && data.success) {
-                alert("📊 রেজিস্ট্রেশন সফল হয়েছে!");
+                alert("রেজিস্ট্রেশন সফল হয়েছে!");
+                localStorage.setItem('driverName', formData.name);
                 onRegisterSuccess(formData.name);
             } else {
                 alert(data.detail || "রেজিস্ট্রেশন ব্যর্থ হয়েছে।");

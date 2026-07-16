@@ -1,100 +1,43 @@
-import React, { useState, useEffect, useRef } from 'react';
-import DriverChat from "./DriverChat"; // একই ফোল্ডারে থাকা চ্যাট কম্পোনেন্টকে ইমপোর্ট করা হলো
+import React from 'react';
 
-function DriverControlPanel() {
-  const [messages, setMessages] = useState([]);
-  const [isConfirmed, setIsConfirmed] = useState(false);
-  
-  // ১. শুরুতে কাস্টমারের নাম খালি থাকবে, কাস্টমার মেসেজ দিলে এটি ডায়নামিকালি আপডেট হবে
-  const [targetCustomer, setTargetCustomer] = useState(""); 
-  
-  const ws = useRef(null);
-  
-  // ২. এটি ডেটাবেজ থেকেই ডায়নামিকালি আসছে (লগইন করা ড্রাইভারের নাম)
-  const myName = localStorage.getItem("driverName") || "Driver"; 
-
-  useEffect(() => {
-    // ব্যাকএন্ড WebSocket কানেকশন চালু করা
-    ws.current = new WebSocket("ws://127.0.0.1:8000/ws/chat");
-
-    ws.current.onopen = () => {
-      console.log(`Connected to Backend as: ${myName}`);
-      // কানেক্ট হয়েই ব্যাকএন্ডে নিজের নাম রেজিস্টার করা
-      ws.current.send(JSON.stringify({ name: myName }));
-    };
-
-    ws.current.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log("Incoming WebSocket data:", data);
-
-      // যদি ব্যাকএন্ড থেকে এরর আসে (যেমন কাস্টমার অফলাইন)
-      if (data.msg === "error") {
-        setMessages((prev) => [...prev, { 
-          sender: "System", 
-          text: `❌ মেসেজ যায়নি! কাস্টমার অফলাইন আছেন।` 
-        }]);
-        return;
-      }
-
-      // কাস্টমার থেকে আসা মেসেজ হ্যান্ডেল করা
-      if (data.sender && data.msg) {
-        // কাস্টমার মেসেজ পাঠালে তার আসল নাম ডায়নামিকালি ট্র্যাকিংয়ে রাখা
-        if (data.sender !== myName) {
-          setTargetCustomer(data.sender);
-        }
-
-        setMessages((prev) => [...prev, { 
-          sender: data.sender, 
-          text: data.msg 
-        }]);
-      }
-    };
-
-    return () => {
-      if (ws.current) ws.current.close();
-    };
-  }, [myName]);
-
-  // ড্রাইভার চ্যাটবক্স থেকে 'Send' বাটনে ক্লিক করলে এই ফাংশনটি চলবে
-  const handleSendReply = (text) => {
-    if (!text.trim()) return;
-
-    if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-      const payload = {
-        sender: myName,
-        target: targetCustomer, 
-        text: text
-      };
-      
-      ws.current.send(JSON.stringify(payload));
-      setMessages((prev) => [...prev, { sender: myName, text: text }]);
-    } else {
-      console.error("WebSocket is not open!");
-    }
-  };
-
+/**
+ * 🚀 ফিক্স নোট:
+ * আগে এই কম্পোনেন্ট নিজেই WebSocket + DriverChat চালাতো, অথচ App.jsx-ও একই কাজ করতো।
+ * দুই জায়গায় সকেট = ডুপ্লিকেট কানেকশন + বিভ্রান্তি।
+ *
+ * এখন এটি শুধু বাম পাশের UI শেল:
+ * - activeRequest দেখায়
+ * - children হিসেবে App থেকে পাঠানো <DriverChat /> রেন্ডার করে
+ * WebSocket লজিক App.jsx-এই থাকবে।
+ */
+function DriverControlPanel({ activeRequest, isConfirmedByCustomer, children }) {
   return (
-    <div className="driver-dashboard" style={{ padding: '20px' }}>
-      <h2>Driver Control Panel</h2>
-      <div style={{ color: '#00e676', marginBottom: '10px' }}>
-        🟢 Online as: <strong>{myName}</strong>
+    <div className="controls-panel driver-theme">
+      <h2 className="title" style={{ margin: 0 }}>Driver Dashboard</h2>
+      <div className="badge-role driver-badge">DRIVER ONLINE</div>
+
+      {/* প্রোগ্রেস স্টেপ — রাইড স্টেট অনুযায়ী হাইলাইট */}
+      <div className="step-indicator">
+        <div className={`step ${activeRequest ? 'active' : ''}`}>1. Request</div>
+        <div className={`step ${activeRequest ? 'active' : ''}`}>2. Bargain</div>
+        <div className={`step ${isConfirmedByCustomer ? 'active' : ''}`}>3. Confirmed</div>
       </div>
-      {targetCustomer && (
-        <div style={{ color: '#aaa', fontSize: '14px', marginBottom: '10px' }}>
-          💬 Chatting with: <strong>{targetCustomer}</strong>
+
+      {activeRequest ? (
+        <div style={{ background: '#262626', padding: '12px', borderRadius: '8px', fontSize: '13px' }}>
+          <div>Customer: <strong>{activeRequest.customer_name}</strong></div>
+          <div style={{ marginTop: '6px', color: '#aaa' }}>
+            Pickup / Dropoff markers are shown on the map.
+          </div>
+        </div>
+      ) : (
+        <div style={{ background: '#262626', padding: '12px', borderRadius: '8px', color: '#888', fontSize: '13px' }}>
+          No active ride request yet. Stay online and wait for a customer.
         </div>
       )}
-      
-      {/* ম্যাপ বা অন্যান্য উইজেট এখানে থাকলে থাকবে */}
-      {/* ... আপনার ম্যাপের কোড ... */}
 
-      {/* ড্রাইভার চ্যাট কম্পোনেন্ট রেন্ডার */}
-      <DriverChat 
-        messages={messages} 
-        onSendReply={handleSendReply} 
-        isConfirmedByCustomer={isConfirmed}
-        myName={myName}
-      />
+      {/* App.jsx থেকে children = <DriverChat ... /> */}
+      {children}
     </div>
   );
 }

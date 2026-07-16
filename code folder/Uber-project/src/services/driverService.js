@@ -3,8 +3,8 @@ import axios from 'axios';
 // ১. ব্যাকএন্ড থেকে লাইভ অনলাইন ড্রাইভারদের লিস্ট নিয়ে আসার ফাংশন
 export const getAvailableDrivers = async () => {
   try {
-    // 🚀 localhost ব্যবহার করা সেফ উবুন্টুর জন্য
-    const response = await fetch('http://localhost:8000/api/active-drivers');
+    // 🚀 127.0.0.1 — ড্রাইভার অ্যাপ ও লগইনের সাথে কনসিস্টেন্ট
+    const response = await fetch('http://127.0.0.1:8000/api/active-drivers');
     const data = await response.json();
     
     console.log("📡 Raw Driver Data from backend:", data);
@@ -39,7 +39,7 @@ export const predictTripTime = async (pickup, dropoff) => {
     
     const formattedDateTime = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
 
-    const response = await axios.post('http://localhost:8000/predict', {
+    const response = await axios.post('http://127.0.0.1:8000/predict', {
       pickup_datetime: formattedDateTime,
       pickup_longitude: pickup.lng,
       pickup_latitude: pickup.lat,
