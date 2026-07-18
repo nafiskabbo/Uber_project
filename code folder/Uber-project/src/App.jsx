@@ -69,10 +69,12 @@ function App() {
     ws.current.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        if (data.sender && (data.msg || data.text)) {
+        const text = data.msg || data.text;
+        // System অ্যাকও চ্যাটে দেখানো যায়; শুধু খালি মেসেজ স্কিপ
+        if (data.sender && text) {
           setMessages((prev) => [...prev, {
             sender: data.sender,
-            text: data.msg || data.text
+            text
           }]);
         }
       } catch (err) {
@@ -193,6 +195,7 @@ function App() {
       <ControlPanel
         selectionMode={clickMode} setSelectionMode={setClickMode}
         pickupLocation={pointB} dropoffLocation={pointC}
+        onPredict={handleSearchDrivers}
         loading={isMatching} driverFound={selectedDriver !== null}
         error={error} setPickupLocation={setPointB} setDropoffLocation={setPointC}
       >
@@ -204,6 +207,12 @@ function App() {
           pointC={pointC}
           onSearchDrivers={handleSearchDrivers}
           isMatching={isMatching}
+          onUseDefaultLocations={() => {
+            // ম্যাপ কী না থাকলেও রাইড রিকোয়েস্ট টেস্ট করা যায়
+            setPointB({ lat: 24.3745, lng: 88.6042 });
+            setPointC({ lat: 24.3945, lng: 88.6242 });
+            setClickMode('C');
+          }}
         />
 
         {selectedDriver && (

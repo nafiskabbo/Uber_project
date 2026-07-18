@@ -47,11 +47,16 @@ function App() {
     ws.current.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
+        const text = data.msg || data.text;
+        if (!data.sender || !text) return;
 
-        if (data.sender && (data.msg || data.text)) {
-          // কোনো ফিক্সড নাম নেই — ডাইনামিক কাস্টমার ট্র্যাকিং
+        // 🚀 ফিক্স: ব্যাকএন্ড "System" অ্যাক (Connected / offline notice) কাস্টমার নয়।
+        // আগে System-কে activeRequest বানিয়ে রিপ্লাই target="System" হতো → "System অফলাইন" এরর।
+        const isSystem = data.sender === "System";
+
+        if (!isSystem) {
           setActiveRequest(prev => {
-            if (!prev) {
+            if (!prev || prev.customer_name === "System") {
               return {
                 customer_name: data.sender,
                 pickup: data.pickup || { lat: 24.3745, lng: 88.6042 },
@@ -60,12 +65,12 @@ function App() {
             }
             return prev;
           });
-
-          setMessages((prev) => [...prev, {
-            sender: data.sender,
-            text: data.msg || data.text
-          }]);
         }
+
+        setMessages((prev) => [...prev, {
+          sender: data.sender,
+          text
+        }]);
       } catch (err) {
         console.error("Error parsing incoming message:", err);
       }
@@ -82,7 +87,14 @@ function App() {
 
   // ---- ৩. ডাইনামিক মেসেজ রিপ্লাই ফাংশন ----
   const handleSendReply = (replyText) => {
-    if (!user || !activeRequest) return;
+    if (!user) return;
+
+    // আসল কাস্টমার না থাকলে পাঠাবে না (System টার্গেট ব্লক)
+    const targetCustomer = activeRequest?.customer_name;
+    if (!targetCustomer || targetCustomer === "System") {
+      alert("এখনো কোনো কাস্টমার মেসেজ পাঠায়নি। আগে কাস্টমার অ্যাপ থেকে মেসেজ আসুক।");
+      return;
+    }
 
     // নিজের স্ক্রিনে মেসেজ পুশ করা
     setMessages(prev => [...prev, { sender: user.name, text: replyText }]);
@@ -90,7 +102,7 @@ function App() {
     if (ws.current && ws.current.readyState === WebSocket.OPEN) {
       ws.current.send(JSON.stringify({
         sender: user.name,
-        target: activeRequest.customer_name, // 🚀 টার্গেট = যে কাস্টমার মেসেজ দিয়েছিল
+        target: targetCustomer, // 🚀 টার্গেট = যে কাস্টমার মেসেজ দিয়েছিল
         text: replyText,
         msg: replyText
       }));
